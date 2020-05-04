@@ -1925,6 +1925,15 @@ the request to potentially return multiple responses, where non-deferred data is
 delivered in the initial response and data deferred delivered in a subsequent response.
 `@include` and `@skip` take presedence over `@defer`. 
 
+The `if` argument allows for conditional deprioritization of the indicated fragment. 
+If the `if` argument is present, and evaulates to `false`, the fragment must not
+be deprioritized. If the `if` argument evaluates to `true`, or it is not present, 
+the fragment should be deprioritized. 
+
+The `label` argument can be used by GraphQL clients to identify the data returned in
+subsequent responses. The value provided to the `label` argument should be unique 
+across all `@defer` and `@stream` directives in a single GraphQL operation.
+
 ```graphql example
 query myQuery($shouldDefer: Boolean) {
    user {
@@ -1948,6 +1957,18 @@ The `@stream` directive may be provided for a field of `List` type so that the
 backend can leverage technology such asynchronous iterators to provide a partial
 list in the initial response, and additional list items in subsequent responses.
 `@include` and `@skip` take presedence over `@stream`.
+
+The `if` argument allows for conditional deprioritization of the indicated field. 
+If the `if` argument is present, and evaulates to `false`, the entire list must 
+be returned in the initial response. If the `if` argument evaluates to `true`, 
+or it is not present, the number of list items specified by `initial_count` should 
+be returned in the initial response. Each additional list item should be returned 
+in a subsequent response.
+
+The `label` argument can be used by GraphQL clients to identify the data returned in 
+subsequent responses. The value provided to the `label` argument should be unique 
+across all `@defer` and `@stream` directives in a single GraphQL operation.
+
 ```graphql example
 query myQuery($shouldDefer: Boolean) {
    user {
